@@ -15,22 +15,28 @@ export class AppComponent {
   private ngzone = inject(NgZone)
 
   constructor(){
-    setTimeout(() => {
-      const mf1placeholder = document.getElementById('mf1placeholder')
-      mf1placeholder?.remove()
-      this.renderMf1()
-    }, 5000);
+    // setTimeout(() => {
+    //   const mf1placeholder = document.getElementById('mf1placeholder')
+    //   mf1placeholder?.remove()
+    //   this.renderMf1()
+    // }, 5000);
 
   }
 
   renderMf1(){
+    const mf1placeholder = document.getElementById('mf1placeholder')
+    mf1placeholder?.remove()
+
     initFederation({
 	    "mfe1": "http://localhost:4201/remoteEntry.json"
     })
       .catch(err => console.error(err))
       .then(_ => {
         loadRemoteModule('mfe1', './Component').then((m) => {
-          this.ngzone.runOutsideAngular(m.bootstrap)
+          const ele = document.createElement(m.mf.meta.elementName)
+          const parent = document.getElementById('mfzone')
+          parent?.appendChild(ele)
+          this.ngzone.runOutsideAngular(m.mf.bootstrap)
         })
       })
       .catch(err => console.error(err));
